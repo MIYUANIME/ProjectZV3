@@ -78,13 +78,13 @@ const SpotlightCarousel: React.FC<SpotlightCarouselProps> = ({ movies }) => {
             <div className="mb-6">
               {currentMovie.title.toLowerCase().includes('doraemon') ? (
                 <img 
-                  src="https://raw.githubusercontent.com/MIYUANIME/ProjectZV3/refs/heads/main/1715414247018-t.webp?token=GHSAT0AAAAAADG3TJKIRQ6PY5P5X2AOZWDK2EGFMYQ"
+                  src="1715414247018-t.webp"
                   alt="Doraemon"
                   className="w-80 h-20 object-contain"
                 />
               ) : currentMovie.title.toLowerCase().includes('shin-chan') || currentMovie.title.toLowerCase().includes('shinchan') ? (
                 <img 
-                  src="https://raw.githubusercontent.com/MIYUANIME/ProjectZV3/refs/heads/main/1715415172763-t.webp?token=GHSAT0AAAAAADG3TJKJK7VJJM3EC2RMFIIS2EGFNKQ"
+                  src="1715415172763-t.webp"
                   alt="Shin-chan"
                   className="w-64 h-20 object-contain"
                 />

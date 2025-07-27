@@ -468,9 +468,29 @@ export function getTVShowInfo(showId: string): TVShow | null {
         seasons: [
           { id: 'season-1', seasonNumber: 1, title: 'Season 1', totalEpisodes: 52, episodes: [] }
         ]
-      }
+      },
+      {
+        id: 'detective-conan',
+        title: 'Detective Conan',
+        poster: 'https://media.themoviedb.org/t/p/w440_and_h660_face/hSKD1ysKYJ36t6iUSf8dN3C76Se.jpg',
+        genre: 'Mystery, Detective, Adventure',
+        rating: '8.5/10',
+        year: '1996',
+        description: 'Shinichi Kudo, a high school detective, is transformed into a child while investigating a mysterious organization and solves a multitude of cases while impersonating his childhood friend.',
+        totalSeasons: 1,
+        totalEpisodes: 0, // Do not reference DETECTIVE_CONAN_EPISODES
+        status: 'ongoing',
+        seasons: [
+          {
+            id: 'season-1',
+            seasonNumber: 1,
+            title: 'Season 1',
+            totalEpisodes: 0, // Do not reference DETECTIVE_CONAN_EPISODES
+            episodes: [], // Do not reference DETECTIVE_CONAN_EPISODES
+          }
+        ]
+      },
     ];
-    
     return tvShows.find(show => show.id === showId) || null;
 }
 
@@ -552,8 +572,50 @@ export function getAllTVShows(): TVShow[] {
       seasons: [
         { id: 'season-1', seasonNumber: 1, title: 'Season 1', totalEpisodes: 52, episodes: [] }
       ]
-    }
+    },
+    {
+      id: 'detective-conan',
+      title: 'Detective Conan',
+      poster: 'https://media.themoviedb.org/t/p/w440_and_h660_face/hSKD1ysKYJ36t6iUSf8dN3C76Se.jpg',
+      genre: 'Mystery, Detective, Adventure',
+      rating: '8.5/10',
+      year: '1996',
+      description: 'Shinichi Kudo, a high school detective, is transformed into a child while investigating a mysterious organization and solves a multitude of cases while impersonating his childhood friend.',
+      totalSeasons: 1,
+      totalEpisodes: 0, // Do not reference DETECTIVE_CONAN_EPISODES
+      status: 'ongoing',
+      seasons: [
+        {
+          id: 'season-1',
+          seasonNumber: 1,
+          title: 'Season 1',
+          totalEpisodes: 0, // Do not reference DETECTIVE_CONAN_EPISODES
+          episodes: [], // Do not reference DETECTIVE_CONAN_EPISODES
+        }
+      ]
+    },
   ];
+}
+
+/**
+ * Helper to parse Detective Conan episodes from a text block
+ */
+export function parseDetectiveConanEpisodes(episodeText: string): Episode[] {
+  const lines = episodeText.split('\n').filter(line => line.trim().startsWith('Episode'));
+  const poster = 'https://media.themoviedb.org/t/p/w440_and_h660_face/hSKD1ysKYJ36t6iUSf8dN3C76Se.jpg';
+  return lines.map((line, idx) => {
+    const match = line.match(/Episode (\d+): (.+)/);
+    if (!match) return null;
+    const episodeNumber = parseInt(match[1], 10);
+    const url = match[2].trim();
+    return {
+      id: `detective-conan-ep${episodeNumber}`,
+      episodeNumber,
+      title: `Episode ${episodeNumber}`,
+      thumbnail: poster,
+      watchUrl: url,
+    };
+  }).filter(Boolean) as Episode[];
 }
 
 /**
@@ -760,4 +822,126 @@ export function updateEpisodeVideoUrl(animeTitle: string, seasonNumber: number, 
       console.log(`✅ Updated Episode ${episodeNumber} with video URL in cache`);
     }
   }
+} 
+
+// --- Detective Conan Manual Episode Data ---
+const DETECTIVE_CONAN_POSTER = 'https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/media/image/2020/09/detective-conan-2083769.jpg?tf=3840x';
+const DETECTIVE_CONAN_EPISODES = [
+  { id: 'detective-conan-ep1', episodeNumber: 1, title: 'Episode 1', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/dXFgWzAVw' },
+  { id: 'detective-conan-ep2', episodeNumber: 2, title: 'Episode 2', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/Ww305cDV_' },
+  { id: 'detective-conan-ep3', episodeNumber: 3, title: 'Episode 3', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/afs-n50pI' },
+  { id: 'detective-conan-ep4', episodeNumber: 4, title: 'Episode 4', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/ZLsqkFLzv' },
+  { id: 'detective-conan-ep5', episodeNumber: 5, title: 'Episode 5', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/p6x5jsgqN' },
+  { id: 'detective-conan-ep6', episodeNumber: 6, title: 'Episode 6', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/5ck1YyMHp' },
+  { id: 'detective-conan-ep7', episodeNumber: 7, title: 'Episode 7', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/_8bEoEuRf' },
+  { id: 'detective-conan-ep8', episodeNumber: 8, title: 'Episode 8', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/tAKpX9Du2' },
+  { id: 'detective-conan-ep9', episodeNumber: 9, title: 'Episode 9', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/ti32o0JN9' },
+  { id: 'detective-conan-ep10', episodeNumber: 10, title: 'Episode 10', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/Izv4MZjzP' },
+  { id: 'detective-conan-ep11', episodeNumber: 11, title: 'Episode 11', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/a1fH09XzG' },
+  { id: 'detective-conan-ep12', episodeNumber: 12, title: 'Episode 12', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/IUs8mK96o' },
+  { id: 'detective-conan-ep13', episodeNumber: 13, title: 'Episode 13', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/34qMcvPao' },
+  { id: 'detective-conan-ep14', episodeNumber: 14, title: 'Episode 14', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/uDJCd_8yA' },
+  { id: 'detective-conan-ep15', episodeNumber: 15, title: 'Episode 15', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/jlmFJT-Ux' },
+  { id: 'detective-conan-ep16', episodeNumber: 16, title: 'Episode 16', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/6o8VryzOB' },
+  { id: 'detective-conan-ep17', episodeNumber: 17, title: 'Episode 17', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/kzhY2-IFXP' },
+  { id: 'detective-conan-ep18', episodeNumber: 18, title: 'Episode 18', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/zfVqk8PPB' },
+  { id: 'detective-conan-ep19', episodeNumber: 19, title: 'Episode 19', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/Jp9n2Vbrz' },
+  { id: 'detective-conan-ep20', episodeNumber: 20, title: 'Episode 20', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/l1Lqkx_eJ' },
+  { id: 'detective-conan-ep21', episodeNumber: 21, title: 'Episode 21', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/ovbyz0h9s' },
+  { id: 'detective-conan-ep22', episodeNumber: 22, title: 'Episode 22', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/I-YL4qOX_' },
+  { id: 'detective-conan-ep23', episodeNumber: 23, title: 'Episode 23', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/EAu3XQggY' },
+  { id: 'detective-conan-ep24', episodeNumber: 24, title: 'Episode 24', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/67fBC-Ulk' },
+  { id: 'detective-conan-ep25', episodeNumber: 25, title: 'Episode 25', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/GRHOVYtr1' },
+  { id: 'detective-conan-ep26', episodeNumber: 26, title: 'Episode 26', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/J2FGY9Mk0' },
+  { id: 'detective-conan-ep27', episodeNumber: 27, title: 'Episode 27', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/LIaMcChMK' },
+  { id: 'detective-conan-ep28', episodeNumber: 28, title: 'Episode 28', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/IgVZl-1ut' },
+  { id: 'detective-conan-ep29', episodeNumber: 29, title: 'Episode 29', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/PtYhuiU8w' },
+  { id: 'detective-conan-ep30', episodeNumber: 30, title: 'Episode 30', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/7YE6FnTLq' },
+  { id: 'detective-conan-ep31', episodeNumber: 31, title: 'Episode 31', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/5lb_pFFIM' },
+  { id: 'detective-conan-ep32', episodeNumber: 32, title: 'Episode 32', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/laeLIhgbC' },
+  { id: 'detective-conan-ep33', episodeNumber: 33, title: 'Episode 33', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/AnRt8gtqU' },
+  { id: 'detective-conan-ep34', episodeNumber: 34, title: 'Episode 34', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/uqZm41WKg' },
+  { id: 'detective-conan-ep35', episodeNumber: 35, title: 'Episode 35', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/2V6VSRcmD' },
+  { id: 'detective-conan-ep36', episodeNumber: 36, title: 'Episode 36', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/0ZBstZa7C' },
+  { id: 'detective-conan-ep37', episodeNumber: 37, title: 'Episode 37', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/FKYCd86Uvt' },
+  { id: 'detective-conan-ep38', episodeNumber: 38, title: 'Episode 38', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/1JY6kuCl8' },
+  { id: 'detective-conan-ep39', episodeNumber: 39, title: 'Episode 39', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/xZUVa3_IL' },
+  { id: 'detective-conan-ep40', episodeNumber: 40, title: 'Episode 40', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/S9DkUEv2_' },
+  { id: 'detective-conan-ep41', episodeNumber: 41, title: 'Episode 41', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/xpA85h0Wm' },
+  { id: 'detective-conan-ep42', episodeNumber: 42, title: 'Episode 42', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/Zu9kJh9r5' },
+  { id: 'detective-conan-ep43', episodeNumber: 43, title: 'Episode 43', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/dil1F83mj' },
+  { id: 'detective-conan-ep44', episodeNumber: 44, title: 'Episode 44', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/49iPLWolC' },
+  { id: 'detective-conan-ep45', episodeNumber: 45, title: 'Episode 45', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/tSjYy0bfeC' },
+  { id: 'detective-conan-ep46', episodeNumber: 46, title: 'Episode 46', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/tyN1dqqM_' },
+  { id: 'detective-conan-ep47', episodeNumber: 47, title: 'Episode 47', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/BzpfThfy0' },
+  { id: 'detective-conan-ep48', episodeNumber: 48, title: 'Episode 48', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/gpuQGOtsO' },
+  { id: 'detective-conan-ep49', episodeNumber: 49, title: 'Episode 49', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/g-jYSv6GI' },
+  { id: 'detective-conan-ep50', episodeNumber: 50, title: 'Episode 50', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/LVlEA5AJ8' },
+  { id: 'detective-conan-ep51', episodeNumber: 51, title: 'Episode 51', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/oSb1dO7KR' },
+  { id: 'detective-conan-ep52', episodeNumber: 52, title: 'Episode 52', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/DA6mtb9DR' },
+  { id: 'detective-conan-ep53', episodeNumber: 53, title: 'Episode 53', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/aMAY4CDQ2' },
+  { id: 'detective-conan-ep54', episodeNumber: 54, title: 'Episode 54', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/guqKlqYwAg' },
+  { id: 'detective-conan-ep55', episodeNumber: 55, title: 'Episode 55', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/B-v5TW9NL' },
+  { id: 'detective-conan-ep56', episodeNumber: 56, title: 'Episode 56', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/Kkp8tXKRa' },
+  { id: 'detective-conan-ep57', episodeNumber: 57, title: 'Episode 57', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/VTYGDwgAz' },
+  { id: 'detective-conan-ep58', episodeNumber: 58, title: 'Episode 58', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/QW1gqc0M4' },
+  { id: 'detective-conan-ep59', episodeNumber: 59, title: 'Episode 59', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/5zB9VhPiT' },
+  { id: 'detective-conan-ep60', episodeNumber: 60, title: 'Episode 60', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/OugXIPbX4' },
+  { id: 'detective-conan-ep61', episodeNumber: 61, title: 'Episode 61', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/PUvNG3O_r' },
+  { id: 'detective-conan-ep62', episodeNumber: 62, title: 'Episode 62', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/zmv_OlpOK' },
+  { id: 'detective-conan-ep63', episodeNumber: 63, title: 'Episode 63', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/aOf45XZxI' },
+  { id: 'detective-conan-ep64', episodeNumber: 64, title: 'Episode 64', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/Lufhk_uay' },
+  { id: 'detective-conan-ep65', episodeNumber: 65, title: 'Episode 65', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/-rSzHnI8-' },
+  { id: 'detective-conan-ep66', episodeNumber: 66, title: 'Episode 66', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/OprkkdIbM' },
+  { id: 'detective-conan-ep67', episodeNumber: 67, title: 'Episode 67', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/EVKMlO_TB' },
+  { id: 'detective-conan-ep68', episodeNumber: 68, title: 'Episode 68', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/wJR4coh7F' },
+  { id: 'detective-conan-ep69', episodeNumber: 69, title: 'Episode 69', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/j5952DEhp' },
+  { id: 'detective-conan-ep70', episodeNumber: 70, title: 'Episode 70', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/8jsazrsSf' },
+  { id: 'detective-conan-ep71', episodeNumber: 71, title: 'Episode 71', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/XsxbKiJPd' },
+  { id: 'detective-conan-ep72', episodeNumber: 72, title: 'Episode 72', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/ugQCZyKCD' },
+  { id: 'detective-conan-ep73', episodeNumber: 73, title: 'Episode 73', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/ro6ZWsvEZ' },
+  { id: 'detective-conan-ep74', episodeNumber: 74, title: 'Episode 74', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/Wa_7IiNyG' },
+  { id: 'detective-conan-ep75', episodeNumber: 75, title: 'Episode 75', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/Om2atzC3O' },
+  { id: 'detective-conan-ep76', episodeNumber: 76, title: 'Episode 76', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/5FR412ViD' },
+  { id: 'detective-conan-ep77', episodeNumber: 77, title: 'Episode 77', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/of4BlIqRG' },
+  { id: 'detective-conan-ep78', episodeNumber: 78, title: 'Episode 78', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/WVNTcY6nc' },
+  { id: 'detective-conan-ep79', episodeNumber: 79, title: 'Episode 79', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/oVyUlR-Sh' },
+  { id: 'detective-conan-ep80', episodeNumber: 80, title: 'Episode 80', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/Ai2PeCF9z' },
+  { id: 'detective-conan-ep81', episodeNumber: 81, title: 'Episode 81', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/thx27RXRg' },
+  { id: 'detective-conan-ep82', episodeNumber: 82, title: 'Episode 82', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/YteIMTqnD' },
+  { id: 'detective-conan-ep83', episodeNumber: 83, title: 'Episode 83', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/gj0ycdsaw' },
+  { id: 'detective-conan-ep84', episodeNumber: 84, title: 'Episode 84', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/s7mFSDccJT' },
+  { id: 'detective-conan-ep85', episodeNumber: 85, title: 'Episode 85', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/oRppEaDeB' },
+  { id: 'detective-conan-ep86', episodeNumber: 86, title: 'Episode 86', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/bJI2stWas' },
+  { id: 'detective-conan-ep87', episodeNumber: 87, title: 'Episode 87', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/tqo8XCx--' },
+  { id: 'detective-conan-ep88', episodeNumber: 88, title: 'Episode 88', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/F_Q74kh05' },
+  { id: 'detective-conan-ep89', episodeNumber: 89, title: 'Episode 89', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/oldZuUaOm' },
+  { id: 'detective-conan-ep90', episodeNumber: 90, title: 'Episode 90', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/0EYmE5XAK' },
+  { id: 'detective-conan-ep91', episodeNumber: 91, title: 'Episode 91', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/B9663Wvdb' },
+  { id: 'detective-conan-ep92', episodeNumber: 92, title: 'Episode 92', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/1zr6jhBQa' },
+  { id: 'detective-conan-ep93', episodeNumber: 93, title: 'Episode 93', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/sfnboCLfH' },
+  { id: 'detective-conan-ep94', episodeNumber: 94, title: 'Episode 94', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/HzxdYv9IX' },
+  { id: 'detective-conan-ep95', episodeNumber: 95, title: 'Episode 95', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/uvqwsmiXL' },
+  { id: 'detective-conan-ep96', episodeNumber: 96, title: 'Episode 96', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/-Xje09x8m' },
+  { id: 'detective-conan-ep97', episodeNumber: 97, title: 'Episode 97', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/xVlPaEAQ2' },
+  { id: 'detective-conan-ep98', episodeNumber: 98, title: 'Episode 98', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/uSqrGj2yc' },
+  { id: 'detective-conan-ep99', episodeNumber: 99, title: 'Episode 99', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/iJQbx4CYaa' },
+  { id: 'detective-conan-ep100', episodeNumber: 100, title: 'Episode 100', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/92x1yGUVN' },
+  { id: 'detective-conan-ep101', episodeNumber: 101, title: 'Episode 101', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/1u2SNxFVn' },
+  { id: 'detective-conan-ep102', episodeNumber: 102, title: 'Episode 102', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/P-cTKMT29' },
+  { id: 'detective-conan-ep103', episodeNumber: 103, title: 'Episode 103', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/4Vr0XR1oF' },
+  { id: 'detective-conan-ep104', episodeNumber: 104, title: 'Episode 104', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/QQkMCSTgw' },
+  { id: 'detective-conan-ep105', episodeNumber: 105, title: 'Episode 105', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/hTo9YIUHe' },
+  { id: 'detective-conan-ep106', episodeNumber: 106, title: 'Episode 106', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/NkoGEROPL' },
+  { id: 'detective-conan-ep107', episodeNumber: 107, title: 'Episode 107', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/b16xy8D5C' },
+  { id: 'detective-conan-ep108', episodeNumber: 108, title: 'Episode 108', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/G8OTAg-ld' },
+  { id: 'detective-conan-ep109', episodeNumber: 109, title: 'Episode 109', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/fAbtoOvYL' },
+  { id: 'detective-conan-ep110', episodeNumber: 110, title: 'Episode 110', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/JUc_-9ReA' },
+  { id: 'detective-conan-ep111', episodeNumber: 111, title: 'Episode 111', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/6uqcw0FXe' },
+  { id: 'detective-conan-ep112', episodeNumber: 112, title: 'Episode 112', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/aEvv8dZo4' },
+  { id: 'detective-conan-ep113', episodeNumber: 113, title: 'Episode 113', thumbnail: DETECTIVE_CONAN_POSTER, watchUrl: 'https://short.icu/RMzsxVhQj' },
+];
+
+export function getDetectiveConanEpisodes() {
+  return DETECTIVE_CONAN_EPISODES;
 } 

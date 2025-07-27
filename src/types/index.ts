@@ -111,6 +111,7 @@ export interface TVShow {
   seasons: Season[];
   isNew?: boolean;
   spotlightImage?: string;
+  manual?: boolean;
 }
 
 export interface Season {

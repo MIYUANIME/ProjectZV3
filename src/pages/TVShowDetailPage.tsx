@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getTVShowInfo, fetchEpisodes, getCachedEpisodes } from '../utils/tvShowUtils';
+import { getTVShowInfo, fetchEpisodes, getCachedEpisodes, getDetectiveConanEpisodes } from '../utils/tvShowUtils';
 import { TVShow, Episode } from '../types';
 import { Play, Star, Calendar, Clock, ArrowLeft, Loader2 } from 'lucide-react';
 
@@ -30,6 +30,13 @@ const TVShowDetailPage: React.FC = () => {
         return;
       }
       setShow(showInfo);
+
+      // --- Custom logic for Detective Conan only ---
+      if (showId === 'detective-conan') {
+        setEpisodes(getDetectiveConanEpisodes());
+        setLoading(false);
+        return;
+      }
 
       // Check cache first
       const cachedEpisodes = getCachedEpisodes(showId, selectedSeason);
@@ -214,24 +221,18 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode, showId }) => {
         {/* Thumbnail */}
         <div className="relative">
           <img
-            src={episode.thumbnail || show.poster}
+            src={episode.thumbnail}
             alt={episode.title}
             className="w-full h-48 object-cover"
             loading="lazy"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = show.poster;
-            }}
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
-          
           {/* Play Button Overlay */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="bg-red-600 rounded-full p-3">
               <Play className="w-6 h-6 text-white fill-current" />
             </div>
           </div>
-          
           {/* Episode Number */}
           <div className="absolute top-2 left-2">
             <span className="bg-black/80 text-white px-2 py-1 rounded text-sm font-semibold">
@@ -239,13 +240,11 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode, showId }) => {
             </span>
           </div>
         </div>
-
         {/* Content */}
         <div className="p-4">
           <h3 className="font-semibold mb-2 group-hover:text-red-500 transition-colors line-clamp-2">
             {episode.title}
           </h3>
-          
           {episode.duration && (
             <p className="text-sm text-gray-400">{episode.duration}</p>
           )}

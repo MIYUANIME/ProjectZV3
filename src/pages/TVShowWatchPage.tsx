@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getTVShowInfo, fetchEpisodes, getCachedEpisodes, fetchVideoUrl, updateEpisodeVideoUrl } from '../utils/tvShowUtils';
+import { getTVShowInfo, fetchEpisodes, getCachedEpisodes, fetchVideoUrl, updateEpisodeVideoUrl, getDetectiveConanEpisodes } from '../utils/tvShowUtils';
 import { TVShow, Episode } from '../types';
 import { 
   Play, 
@@ -86,6 +86,20 @@ const TVShowWatchPage: React.FC = () => {
         return;
       }
       setShow(showInfo);
+
+      // --- Custom logic for Detective Conan only ---
+      if (showId === 'detective-conan') {
+        const episodes = getDetectiveConanEpisodes();
+        setEpisodes(episodes);
+        const episode = episodes.find(ep => ep.episodeNumber === episodeNum);
+        if (episode) {
+          setCurrentEpisode(episode);
+        } else {
+          setError('Episode not found');
+        }
+        setLoading(false);
+        return;
+      }
 
       // Determine which season this episode belongs to
       let targetSeason = seasonNum || 1;
@@ -397,58 +411,62 @@ const TVShowWatchPage: React.FC = () => {
                   </div>
                 </div>
               ) : currentEpisode.watchUrl ? (
-                <iframe
-                  src={currentEpisode.watchUrl}
-                  className="w-full h-full"
-                  frameBorder="0"
-                  allowFullScreen
-                  allow="autoplay; encrypted-media; fullscreen"
-                  title={`${currentEpisode.title} - ${show.title}`}
-                ></iframe>
+                // --- Custom embed for Detective Conan only ---
+                showId === 'detective-conan' ? (
+                  <iframe
+                    src={currentEpisode.watchUrl}
+                    className="w-full h-full"
+                    frameBorder="0"
+                    allowFullScreen
+                    allow="autoplay; encrypted-media; fullscreen"
+                    title={`${currentEpisode.title} - ${show.title}`}
+                  ></iframe>
+                ) : (
+                  <iframe
+                    src={currentEpisode.watchUrl}
+                    className="w-full h-full"
+                    frameBorder="0"
+                    allowFullScreen
+                    allow="autoplay; encrypted-media; fullscreen"
+                    title={`${currentEpisode.title} - ${show.title}`}
+                  ></iframe>
+                )
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-white">
                   <div className="text-center">
                     <p className="text-lg mb-2">Click episode to load video</p>
                     <p className="text-sm text-gray-400">Episode {currentEpisode.episodeNumber}</p>
-                                         <button
-                       onClick={async () => {
-                         if (showId && currentEpisode) {
-                           setLoadingVideo(true);
-                           try {
-                             console.log(`🎬 Loading video for Episode ${currentEpisode.episodeNumber} (Season ${currentSeason})...`);
-                             const videoUrl = await fetchVideoUrl(showId, currentSeason, currentEpisode.episodeNumber);
-                             
-                             if (videoUrl) {
-                               // Update episode in cache with video URL
-                               updateEpisodeVideoUrl(showId, currentSeason, currentEpisode.episodeNumber, videoUrl);
-                               
-                               // Update local state
-                               setEpisodes(prevEpisodes => 
-                                 prevEpisodes.map(ep => 
-                                   ep.episodeNumber === currentEpisode.episodeNumber 
-                                     ? { ...ep, watchUrl: videoUrl }
-                                     : ep
-                                 )
-                               );
-                               
-                               // Update current episode
-                               setCurrentEpisode(prev => prev ? { ...prev, watchUrl: videoUrl } : null);
-                               
-                               console.log(`✅ Video URL loaded for Episode ${currentEpisode.episodeNumber}`);
-                             } else {
-                               console.warn(`⚠️ Failed to load video URL for Episode ${currentEpisode.episodeNumber}`);
-                             }
-                           } catch (error) {
-                             console.error(`❌ Error loading video for Episode ${currentEpisode.episodeNumber}:`, error);
-                           } finally {
-                             setLoadingVideo(false);
-                           }
-                         }
-                       }}
-                       className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                     >
-                       Load Video
-                     </button>
+                    {/* For Detective Conan, no load button needed, just show error */}
+                    {showId !== 'detective-conan' && (
+                      <button
+                        onClick={async () => {
+                          if (showId && currentEpisode) {
+                            setLoadingVideo(true);
+                            try {
+                              const videoUrl = await fetchVideoUrl(showId, currentSeason, currentEpisode.episodeNumber);
+                              if (videoUrl) {
+                                updateEpisodeVideoUrl(showId, currentSeason, currentEpisode.episodeNumber, videoUrl);
+                                setEpisodes(prevEpisodes =>
+                                  prevEpisodes.map(ep =>
+                                    ep.episodeNumber === currentEpisode.episodeNumber
+                                      ? { ...ep, watchUrl: videoUrl }
+                                      : ep
+                                  )
+                                );
+                                setCurrentEpisode(prev => prev ? { ...prev, watchUrl: videoUrl } : null);
+                              }
+                            } catch (error) {
+                              console.error(`❌ Error loading video for Episode ${currentEpisode.episodeNumber}:`, error);
+                            } finally {
+                              setLoadingVideo(false);
+                            }
+                          }
+                        }}
+                        className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        Load Video
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
